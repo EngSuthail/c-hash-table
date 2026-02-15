@@ -1,3 +1,6 @@
+#ifndef HASH_TABLE_H
+#define HASH_TABLE_H
+
 typedef struct 
 {
     char* key; //
@@ -26,4 +29,8 @@ typedef struct
 'ht_item** items;' creates a dynamic array of pointers, allowing each bucket to either point to an item or stay NULL, 
 which saves memory in a sparse table
 */
+
+ht_hash_table* ht_new(void);
+void ht_del_hash_table(ht_hash_table* ht);
+#endif
 
