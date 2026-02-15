@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 int main(){
-    ht_hash_table* ht = ht_new();
-    ht_del_hash_table(ht);
-    printf("success!!");
+    printf("The hash value for 'cat' is %d\n", ht_hash("cat", 151, 53));
+    printf("The hash value for 'dog' is %d", ht_hash("dog", 151, 53));
 }
