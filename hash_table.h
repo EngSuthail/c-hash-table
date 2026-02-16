@@ -32,6 +32,6 @@ which saves memory in a sparse table
 
 ht_hash_table* ht_new(void);
 void ht_del_hash_table(ht_hash_table* ht);
-int  ht_hash(const char* s, const int a, const int m);
+void ht_insert(ht_hash_table* ht, const char* key, const char* value);
 #endif
 
