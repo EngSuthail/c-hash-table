@@ -11,7 +11,6 @@ int main(void) {
     printf("  Size: %d\n", ht->size);
     printf("  Count: %d\n", ht->count);
     
-    // TODO: Test insert/search when implement them
     ht_insert(ht, "cat", "meow");
     ht_insert(ht, "dog", "woof");
     for(int i = 0; i< ht->size; i++){
@@ -20,6 +19,8 @@ int main(void) {
             printf("bucket[%d] | key: %s | value: %s\n", i, item->key, item->value);
         }
     }
+    printf("Hash table count %d\n", ht->count);
+    printf("key : %s value is %s\n", "cat", ht_search(ht, "cat"));
     
     // Cleanup
     ht_del_hash_table(ht);
