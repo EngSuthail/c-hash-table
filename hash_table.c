@@ -7,6 +7,8 @@
 #define HT_PRIME_1 151
 #define HT_PRIME_2 163
 
+static ht_item HT_DELETED_ITEM = {NULL, NULL};
+
 // Initialising function for ht_item
 static ht_item* ht_new_item(const char* k, const char* v){
     ht_item* i = malloc(sizeof(ht_item));
@@ -34,7 +36,7 @@ static void ht_del_item(ht_item* i){
 void ht_del_hash_table(ht_hash_table* ht){
     for(int i = 0; i < ht->size; i++){
         ht_item* item = ht->items[i];
-        if(item != NULL){
+        if(item != NULL && item != &HT_DELETED_ITEM){
             ht_del_item(item);
         }
     }
@@ -69,6 +71,11 @@ void ht_insert(ht_hash_table* ht, const char* key, const char* value){
     ht_item* cur_item = ht->items[index];
     int i = 1;
     while(cur_item != NULL){
+        if(cur_item == &HT_DELETED_ITEM){
+            ht->items[index] = item;
+            ht->count++;
+            return;
+        }
         index = ht_get_hash(key, ht->size, i);
         cur_item = ht->items[index];
         i++;
@@ -81,17 +88,35 @@ char* ht_search(ht_hash_table* ht, const char* key){
     int index = ht_get_hash(key, ht->size,0);
     ht_item* cur_item = ht->items[index];
     int i = 1;
-    while(cur_item != NULL && strcmp(cur_item->key, key) != 0){
+    while(cur_item != NULL){
+        // Check if it's not deleted AND matches
+        if(cur_item != &HT_DELETED_ITEM && strcmp(cur_item->key, key) == 0){
+            return cur_item->value;  // Found it!
+        }
         index = ht_get_hash(key, ht->size, i);
         cur_item = ht->items[index];
         i++;
     }  
-    if (cur_item == NULL) {
-        return NULL;  
-    }  else {
-        return cur_item-> value;
-    }
+    return NULL;
 };
+
+void ht_delete(ht_hash_table* ht, const char* key) {
+    int index = ht_get_hash(key, ht->size, 0);
+    ht_item* item = ht->items[index];
+    int i = 1;
+    while (item != NULL) {
+        if (item != &HT_DELETED_ITEM) {
+            if (strcmp(item->key, key) == 0) {
+                ht_del_item(item);
+                ht->items[index] = &HT_DELETED_ITEM;
+            }
+        }
+        index = ht_get_hash(key, ht->size, i);
+        item = ht->items[index];
+        i++;
+    } 
+    ht->count--;
+}
 
 
 
