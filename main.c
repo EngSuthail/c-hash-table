@@ -4,27 +4,29 @@
 #include <stdio.h>
 
 int main(void) {
-    // Test hash table creation
     ht_hash_table* ht = ht_new();
     
-    printf("Hash table created:\n");
-    printf("  Size: %d\n", ht->size);
-    printf("  Count: %d\n", ht->count);
-    
+    // Insert items
     ht_insert(ht, "cat", "meow");
     ht_insert(ht, "dog", "woof");
-    for(int i = 0; i< ht->size; i++){
-        if(ht->items[i] != NULL){
-            ht_item* item = ht->items[i];
-            printf("bucket[%d] | key: %s | value: %s\n", i, item->key, item->value);
-        }
-    }
-    printf("Hash table count %d\n", ht->count);
-    printf("key : %s value is %s\n", "cat", ht_search(ht, "cat"));
+    ht_insert(ht, "mouse", "squeak");
+    printf("Count after insert: %d\n", ht->count);  // Should be 3
     
-    // Cleanup
+    // Delete middle item
+    ht_delete(ht, "dog");
+    printf("Count after delete: %d\n", ht->count);  // Should be 2
+    
+    // Search should still find mouse
+    char* result = ht_search(ht, "mouse");
+    printf("Found mouse: %s\n", result);  // Should print "squeak"
+    
+    // Reuse deleted spot
+    ht_insert(ht, "bird", "tweet");
+    printf("Count after reinsert: %d\n", ht->count);  // Should be 3
+    
+    // Cleanup (should not crash on sentinel)
     ht_del_hash_table(ht);
-    printf("Hash table deleted successfully\n");
+    printf("Cleanup successful\n");
     
     return 0;
 }
